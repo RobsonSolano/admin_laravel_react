@@ -7,14 +7,16 @@ export default function Users() {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
-    const {setNotification} = useStateContext();
+    const { setNotification } = useStateContext();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         getUsers();
     }, []);
 
     const onDelete = (u) => {
-        if (window.confirm("Deseja realmente deletar este usuário?")) {
+        if (!window.confirm("Deseja realmente deletar este usuário?")) {
             return
         }
 
@@ -24,20 +26,22 @@ export default function Users() {
                 setLoading(true);
                 setNotification("Usuário deletado com sucesso");
                 getUsers()
+                setCurrentPage(page);
             })
     }
 
-    const getUsers = () => {
+    const getUsers = (page = 1) => {
         setLoading(true);
-        axiosClient.get('/users')
+        axiosClient.get(`/users?page=${page}`)
             .then(({ data }) => {
                 setLoading(false);
-                setUsers(data.data)
-                console.log(data);
+                setUsers(data.data);
+                setCurrentPage(page);
+                setTotalPages(data.meta.last_page); // Define o valor de totalPages
             })
             .catch(() => {
                 setLoading(false);
-            })
+            });
     }
 
     return (
@@ -85,6 +89,25 @@ export default function Users() {
                         </tbody>
                     }
                 </table>
+
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'2em 0' }}>
+
+                    <div className="pagination">
+                        <button className=""
+                            onClick={() => getUsers(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            Anterior
+                        </button>
+                        <button style={{marginLeft:'1em'}}
+                            onClick={() => getUsers(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                            Próximo
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
         </div>

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
- import axiosClient from "../axios-client";
+import axiosClient from "../axios-client";
+import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider"
 
 export default function Signup() {
@@ -32,7 +33,7 @@ export default function Signup() {
 
                 if (response && response.status === 422) {
                     setErrors(response.data.errors); // Corrigir "erros" para "errors"
-                }else{
+                } else {
                     setErrors(["Não foi possível efetual o cadastro, tente novamente."]);
                 }
             })
