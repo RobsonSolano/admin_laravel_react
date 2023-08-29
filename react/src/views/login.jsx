@@ -20,23 +20,19 @@ export default function Login() {
 
         setErrors(null)
         axiosClient.post('/login', playlod)
-
             .then(({ data }) => {
                 setUser(data.user)
                 setToken(data.token)
             })
             .catch(err => {
-                const response = err.response;
+                console.log(err.message);
 
-                if (response && response.status === 422) {
-                    if(response.data.errors){
-                        setErrors(response.data.erros);
-                    }else{
-                        setErrors(response.message);
-                    }
-
+                if (err.response && err.response.status === 422 && err.response.data && err.response.data.message) {
+                    setErrors([err.response.data.message]);
+                } else {
+                    setErrors(["E-mail ou senha incorretos, por favor tente novamente."]);
                 }
-            })
+            });
     }
 
     return (
@@ -45,11 +41,13 @@ export default function Login() {
                 Login into your account
             </h1>
 
-            {errors && <div className="alert">
-                {Object.keys(errors).map(key => (
-                    <p key={key}>{errors[key][0]}</p>
-                ))}
-            </div>}
+            {errors && (
+                <div className="alert">
+                    {errors.map((errorMessage, index) => (
+                        <p key={index}>{errorMessage}</p>
+                    ))}
+                </div>
+            )}
             <input ref={emailRef} type="email" placeholder="Email Address" />
             <input ref={passwordRef} type="password" placeholder="Password" />
             <button type="submit" className="btn btn-block">Login</button>

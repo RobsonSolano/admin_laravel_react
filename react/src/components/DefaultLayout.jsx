@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axiosClient from "../axios-client";
 
 export default function DefaultLayout() {
-    const { user, token, setUser, setToken } = useStateContext();
+    const { user, token, notification, setUser, setToken } = useStateContext();
     const [loggedOut, setLoggedOut] = useState(false);
 
     const onLogout = (ev) => {
@@ -24,14 +24,14 @@ export default function DefaultLayout() {
         console.log('Token:', token);
 
         axiosClient.get('/user')
-        .then(({ data }) => {
-            setUser(data);
-        });
+            .then(({ data }) => {
+                setUser(data);
+            });
     }, []);
 
     return (
         <div id="defaultLayout">
-             {loggedOut && <Navigate to="/login" />}
+            {loggedOut && <Navigate to="/login" />}
             <aside>
                 <Link to="/dashboard">Dashboard</Link>
                 <Link to="/users">Users</Link>
@@ -47,9 +47,15 @@ export default function DefaultLayout() {
                     </div>
                 </header>
                 <main>
-                    <Outlet/>
+                    <Outlet />
                 </main>
             </div>
+
+            {
+                notification && <div className="notification">
+                    {notification}
+                </div>
+            }
         </div>
     )
 }

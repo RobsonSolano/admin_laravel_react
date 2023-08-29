@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import axiosClient from "../axios-client";
+ import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider"
 
 export default function Signup() {
@@ -32,7 +31,9 @@ export default function Signup() {
                 const response = err.response;
 
                 if (response && response.status === 422) {
-                    setErrors(response.data.erros);
+                    setErrors(response.data.errors); // Corrigir "erros" para "errors"
+                }else{
+                    setErrors(["Não foi possível efetual o cadastro, tente novamente."]);
                 }
             })
     }
@@ -44,11 +45,13 @@ export default function Signup() {
             </h1>
 
 
-            {errors && <div className="alert">
-                {Object.keys(errors).map(key => (
-                    <p key={key}>{errors[key][0]}</p>
-                ))}
-            </div>}
+            {errors && (
+                <div className="alert">
+                    {errors.map((errorMessage, index) => (
+                        <p key={index}>{errorMessage}</p>
+                    ))}
+                </div>
+            )}
 
             <input ref={nameRef} type="text" placeholder="Full name" />
             <input ref={emailRef} type="email" placeholder="Email Address" />
