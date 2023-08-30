@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 * {
     box-sizing: border-box;
 }
@@ -22,7 +22,7 @@ p {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     margin: 0;
     padding: 0;
     font-size: 14px;
@@ -50,14 +50,15 @@ input:focus {
 .btn-add,
 .btn-edit,
 .btn-delete,
-.btn-paginate {
+.btn-paginate,
+.btn-light {
     font-family: "Roboto", sans-serif;
     outline: 0;
     background: #5b08a7;
     border: 0;
     text-decoration: none;
     padding: 15px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 16px;
     -webkit-transition: all 0.3 ease;
     transition: all 0.3 ease;
@@ -82,6 +83,14 @@ input:focus {
 
 .btn-delete {
     background-color: #b72424;
+}
+
+.btn-light {
+    background-color: #797979;
+}
+
+.btn-light:hover {
+    background-color: #333 !important;
 }
 
 .btn-paginate {
@@ -131,7 +140,7 @@ table>tbody>tr>td {
 }
 
 .card {
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 0.5rem;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
     padding: 1.25rem 1.5rem;
@@ -172,7 +181,7 @@ table>tbody>tr>td {
     width: 360px;
     position: relative;
     z-index: 1;
-    background: #FFFFFF;
+    background: #ffffff;
     max-width: 360px;
     padding: 34px;
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
@@ -206,7 +215,7 @@ table>tbody>tr>td {
 #defaultLayout aside {
     width: 240px;
     background-color: #5b08a7;
-    padding: 1rem
+    padding: 1rem;
 }
 
 #defaultLayout aside>a {
@@ -288,4 +297,42 @@ table>tbody>tr>td {
 .custom-tooltip:hover .button-tooltip {
     opacity: 1;
     visibility: visible;
+}
+
+.table-actions {
+    width: 100px;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+/* Esconde a barra lateral */
+
+.hidden {
+    transform: translateX(-100%);
+    width: 0px !important;
+}
+
+
+/* Expande o conteúdo quando a barra lateral está oculta */
+
+.expanded {
+    width: 100%;
+    /* Altere isso para se ajustar ao seu layout */
+    /* Outros estilos de expansão que você pode precisar */
+}
+
+.defaultLayoutExpanded {
+    flex-direction: column-reverse;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import axiosClient from "../axios-client"
 import { useStateContext } from "../contexts/ContextProvider";
+import { Link } from "react-router-dom";
 
 export default function UserForm() {
 
@@ -9,7 +10,7 @@ export default function UserForm() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
-    const {setNotification} = useStateContext();
+    const { setNotification } = useStateContext();
 
     const [user, setUser] = useState({
         id: null,
@@ -95,7 +96,10 @@ export default function UserForm() {
                         <input onChange={ev => setUser({ ...user, email: ev.target.value })} value={user.email} type="email" placeholder="E-mail" />
                         <input onChange={ev => setUser({ ...user, password: ev.target.value })} type="password" placeholder="Senha" />
                         <input onChange={ev => setUser({ ...user, password_confirmation: ev.target.value })} type="password" placeholder="Password Confirmation" />
-                        <button className="btn">Save</button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Link to="/users" className="btn btn-light">Cancelar</Link>
+                            <button className="btn">Save</button>
+                        </div>
                     </form>
                 }
             </div>

@@ -2,10 +2,14 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars} from '@fortawesome/free-solid-svg-icons';
+
 
 export default function DefaultLayout() {
     const { user, token, notification, setUser, setToken } = useStateContext();
     const [loggedOut, setLoggedOut] = useState(false);
+    const [sidebarHidden, setSidebarHidden] = useState(false);
 
     const onLogout = (ev) => {
         ev.preventDefault();
@@ -20,6 +24,10 @@ export default function DefaultLayout() {
 
     };
 
+    const toggleSidebar = () => {
+        setSidebarHidden(!sidebarHidden);
+    };
+
     useEffect(() => {
         console.log('Token:', token);
 
@@ -30,16 +38,18 @@ export default function DefaultLayout() {
     }, []);
 
     return (
-        <div id="defaultLayout">
+        <div id="defaultLayout" className={` ${sidebarHidden ? "defaultLayoutExpanded" : ""}`}>
             {loggedOut && <Navigate to="/login" />}
-            <aside>
+            <aside className={sidebarHidden ? "hidden" : ""}>
                 <Link to="/dashboard">Dashboard</Link>
                 <Link to="/users">Users</Link>
             </aside>
-            <div className="content">
+            <div className={`content ${sidebarHidden ? "expanded" : ""}`}>
                 <header>
                     <div>
-                        Header
+                        <button className="menu-toggle btn" onClick={toggleSidebar}>
+                            <FontAwesomeIcon icon={faBars} />
+                        </button>
                     </div>
                     <div>
                         {user.name}

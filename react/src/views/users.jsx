@@ -189,7 +189,7 @@ export default function Users() {
                 )}
             </div>
 
-            <div className="card animated fadeInDown">
+            <div className="card animated fadeInDown table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -229,7 +229,7 @@ export default function Users() {
                                     <FontAwesomeIcon icon={faArrowDown} />
                                 )}
                             </th>
-                            <th>Actions</th>
+                            <th className="table-actions">Actions</th>
                         </tr>
                     </thead>
 
@@ -250,12 +250,13 @@ export default function Users() {
                                     <td>{u.name}</td>
                                     <td>{u.email ? u.email : '--'}</td>
                                     <td>{u.created_at}</td>
-                                    <td>
+                                    <td className="table-actions">
                                         <Link className="btn-edit custom-tooltip" to={'/users/' + u.id}>Edit <span className="button-tooltip">Clique para ver os detalhes deste usuario</span></Link>
                                         &nbsp;
                                         <button onClick={() => onDelete(u)} className="btn-delete custom-tooltip">
                                             Delete <span className="button-tooltip">Clique para remover este usuário</span>
-                                        </button>                                    </td>
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
