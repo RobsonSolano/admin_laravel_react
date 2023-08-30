@@ -42,7 +42,7 @@ export default function DefaultLayout() {
             {loggedOut && <Navigate to="/login" />}
             <aside className={sidebarHidden ? "hidden" : ""}>
                 <Link to="/dashboard">Dashboard</Link>
-                <Link to="/users">Users</Link>
+                <Link to="/administradores">Administradores</Link>
             </aside>
             <div className={`content ${sidebarHidden ? "expanded" : ""}`}>
                 <header>
@@ -53,7 +53,7 @@ export default function DefaultLayout() {
                     </div>
                     <div>
                         {user.name}
-                        <a href="#" onClick={onLogout} className="btn-logout">Logout</a>
+                        <a href="#" onClick={onLogout} className="btn-logout" style={{marginLeft:'1em'}}>Logout</a>
                     </div>
                 </header>
                 <main>

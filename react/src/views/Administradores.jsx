@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { format } from 'date-fns';
 
-export default function Users() {
+export default function Administradores() {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -22,6 +21,7 @@ export default function Users() {
     const [sortField, setSortField] = useState("id"); // Campo de ordenação padrão
     const [sortDirection, setSortDirection] = useState("desc"); // Sentido de ordenação padrão
     const [isSortingActive, setIsSortingActive] = useState(false);
+    const [totalItens, setTotalItens] = useState(false);
 
     const handleFilterChange = (field, value) => {
         setTempFilterValues({
@@ -74,17 +74,17 @@ export default function Users() {
     };
 
     const onDelete = (user) => {
-        if (window.confirm(`Deseja realmente excluir o usuário ${user.name}?`)) {
+        if (window.confirm(`Deseja realmente excluir o Administrador ${user.name}?`)) {
             // Chame a função de exclusão na API
             axiosClient.delete(`/users/${user.id}`)
                 .then(() => {
-                    // Atualize a lista de usuários após a exclusão
+                    // Atualize a lista de Administrador após a exclusão
                     getUsers();
-                    setNotification("Usuário excluído com sucesso.", "success");
+                    setNotification("Administrador excluído com sucesso.", "success");
                 })
                 .catch((error) => {
-                    console.error("Erro ao excluir o usuário:", error);
-                    setNotification("Erro ao excluir o usuário.", "error");
+                    console.error("Erro ao excluir o administrador:", error);
+                    setNotification("Erro ao excluir o administrador.", "error");
                 });
         }
     };
@@ -99,6 +99,17 @@ export default function Users() {
         params.append("sort", sortField);
         params.append("direction", sortDirection);
 
+        // Adicionar parâmetros de filtro
+        if (tempFilterValues.name) {
+            params.append("name", tempFilterValues.name);
+        }
+        if (tempFilterValues.email) {
+            params.append("email", tempFilterValues.email);
+        }
+        if (tempFilterValues.created_at) {
+            params.append("created_at", tempFilterValues.created_at);
+        }
+
         params.append("page", page);
 
         axiosClient.get(`/users?${params.toString()}`)
@@ -107,10 +118,11 @@ export default function Users() {
                 setUsers(data.data);
                 setCurrentPage(page);
                 setTotalPages(data.meta.last_page);
+                setTotalItens(data.meta.total);
             })
             .catch((error) => {
                 setLoading(false);
-                console.error('Error fetching users:', error);
+                console.error('Erro ao buscar administradores:', error);
             });
     };
 
@@ -133,14 +145,14 @@ export default function Users() {
     return (
         <div className="card fadeInDown">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1em' }}>
-                <h1>Users</h1>
-                <Link to="/users/new" className="btn-add custom-tooltip">Add new User<span className="button-tooltip">Cadastre um novo usuário</span></Link>
+                <h2>Gerenciar Administradores</h2>
+                <Link to="/administradores/new" className="btn-add custom-tooltip">+ Novo Administrador<span className="button-tooltip">Cadastre um novo administrador</span></Link>
             </div>
 
             <div style={{ marginBottom: '1em', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <div>
                     <button onClick={() => setShowFilter(!showFilter)} className="btn-edit custom-tooltip" style={{ marginBottom: '1em', width: 'max-content' }}>
-                        {showFilter ? "Fechar Filtros " : "Abrir Filtros"}
+                        {showFilter ? "Fechar filtros " : "Exibir filtros"}
                         {showFilter && <span className="button-tooltip">Clique para ocultar o filtro</span>}
                         {!showFilter && <span className="button-tooltip">Clique para exibir o filtro</span>}
                     </button>
@@ -192,7 +204,7 @@ export default function Users() {
             <div className="card animated fadeInDown table-responsive">
                 <table>
                     <thead>
-                        <tr>
+                        <tr className="tr-list-itens">
                             <th onClick={() => handleSort("id")}>
                                 ID{" "}
                                 {sortField === "id" && sortDirection === "asc" && (
@@ -251,10 +263,10 @@ export default function Users() {
                                     <td>{u.email ? u.email : '--'}</td>
                                     <td>{u.created_at}</td>
                                     <td className="table-actions">
-                                        <Link className="btn-edit custom-tooltip" to={'/users/' + u.id}>Edit <span className="button-tooltip">Clique para ver os detalhes deste usuario</span></Link>
+                                        <Link className="btn-edit custom-tooltip" to={'/administradores/' + u.id}>Edit <span className="button-tooltip">Clique para ver os detalhes deste administrador</span></Link>
                                         &nbsp;
                                         <button onClick={() => onDelete(u)} className="btn-delete custom-tooltip">
-                                            Delete <span className="button-tooltip">Clique para remover este usuário</span>
+                                            Delete <span className="button-tooltip">Clique para remover este administrador</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -263,12 +275,14 @@ export default function Users() {
                     }
                 </table>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2em 0' }}>
-
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2em 0', flexDirection:'column' }}>
+                    <div style={{ marginBottom: "1em", textAlign: 'center' }}>
+                        <p>Total de {totalItens} {totalItens > 1 ? 'itens' : 'item'}</p>
+                    </div>
                     <div className="pagination">
-                        <button className="btn-paginate"
+                        <button className={`btn-paginate ${currentPage < 2 ? "disabled" : ""}`}
                             onClick={() => getUsers(currentPage - 1)}
-                            disabled={currentPage === 1}
+                            disabled={currentPage < 2}
                         >
                             Anterior
                         </button>

@@ -4,7 +4,7 @@ import axiosClient from "../axios-client"
 import { useStateContext } from "../contexts/ContextProvider";
 import { Link } from "react-router-dom";
 
-export default function UserForm() {
+export default function AdministradoresForm() {
 
     const { id } = useParams()
     const navigate = useNavigate();
@@ -42,12 +42,12 @@ export default function UserForm() {
             axiosClient.put(`/users/${user.id}`, user)
                 .then(() => {
                     //Todo show notification
-                    setNotification("Usuário atualizado com sucesso");
-                    navigate('/users')
+                    setNotification("Administrador atualizado com sucesso");
+                    navigate('/administradores')
                 })
                 .catch(err => {
                     const response = err.response;
-                    setNotification("Não foi possível atualizar o usuário");
+                    setNotification("Não foi possível atualizar o Administrador");
 
                     if (response && response.status === 422) {
                         setErrors(response.data.errors); // Corrigir "erros" para "errors"
@@ -57,13 +57,13 @@ export default function UserForm() {
             axiosClient.post(`/users`, user)
                 .then(() => {
                     //Todo show notification
-                    setNotification("Usuário cadastrado com sucesso");
+                    setNotification("Administrador cadastrado com sucesso");
 
-                    navigate('/users')
+                    navigate('/administradores')
                 })
                 .catch(err => {
                     const response = err.response;
-                    setNotification("Não foi possível cadastrar o usuário");
+                    setNotification("Não foi possível cadastrar o Administrador");
 
                     if (response && response.status === 422) {
                         setErrors(response.data.errors); // Corrigir "erros" para "errors"
@@ -97,7 +97,7 @@ export default function UserForm() {
                         <input onChange={ev => setUser({ ...user, password: ev.target.value })} type="password" placeholder="Senha" />
                         <input onChange={ev => setUser({ ...user, password_confirmation: ev.target.value })} type="password" placeholder="Password Confirmation" />
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Link to="/users" className="btn btn-light">Cancelar</Link>
+                            <Link to="/administradores" className="btn btn-light">Cancelar</Link>
                             <button className="btn">Save</button>
                         </div>
                     </form>

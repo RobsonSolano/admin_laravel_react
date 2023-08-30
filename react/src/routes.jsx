@@ -1,12 +1,12 @@
 import {Routes, createBrowserRouter, Navigate} from "react-router-dom";
 import Login from "./views/login";
 import Signup from "./views/signup";
-import Users from "./views/users";
+import Administradores from "./views/Administradores";
 import NotFound from "./views/NotFound";
 import Dashboard from "./views/dashboard";
 import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
-import UserForm from "./views/UserForm";
+import AdministradoresForm from "./views/AdministradoresForm";
 
 const router = createBrowserRouter([
     {
@@ -15,23 +15,23 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Navigate to="/users" />
+                element: <Navigate to="/administradores" />
             },
             {
                 path: '/dashboard',
                 element: <Dashboard />
             },
             {
-                path: '/users',
-                element: <Users />
+                path: '/administradores',
+                element: <Administradores />
             },
             {
-                path: '/users/new',
-                element: <UserForm key="userCreate"/>
+                path: '/administradores/new',
+                element: <AdministradoresForm key="AdministradoresCreate"/>
             },
             {
-                path: '/users/:id',
-                element: <UserForm key="userUpdate"/>
+                path: '/administradores/:id',
+                element: <AdministradoresForm key="AdministradoresUpdate"/>
             },
         ]
     },
