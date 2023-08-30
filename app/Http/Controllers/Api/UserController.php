@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -15,9 +16,23 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate(10));
+        $query = User::query()->orderBy('id', 'desc');
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%' . $request->input('email') . '%');
+        }
+
+        if ($request->has('created_at')) {
+            $query->where('created_at', 'like', '%' . $request->input('created_at') . '%');
+        }
+
+        return UserResource::collection($query->paginate(10));
     }
 
     /**
