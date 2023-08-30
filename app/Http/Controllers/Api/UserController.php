@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->orderBy('id', 'desc');
+        $query = User::query();
 
         if ($request->has('name')) {
             $query->where('name', 'like', '%' . $request->input('name') . '%');
@@ -30,6 +30,15 @@ class UserController extends Controller
 
         if ($request->has('created_at')) {
             $query->where('created_at', 'like', '%' . $request->input('created_at') . '%');
+        }
+
+        if ($request->has('sort')) {
+            $sortField = $request->input('sort', 'id');
+            $sortDirection = $request->input('direction', 'asc');
+            $query->orderBy($sortField, $sortDirection);
+        } else {
+            // Ordenação padrão
+            $query->orderBy('id', 'desc');
         }
 
         return UserResource::collection($query->paginate(10));

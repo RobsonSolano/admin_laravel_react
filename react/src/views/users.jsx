@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
+import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { format } from 'date-fns';
 
 export default function Users() {
 
@@ -16,12 +19,33 @@ export default function Users() {
         email: "",
         created_at: ""
     });
+    const [sortField, setSortField] = useState("id"); // Campo de ordenação padrão
+    const [sortDirection, setSortDirection] = useState("desc"); // Sentido de ordenação padrão
+    const [isSortingActive, setIsSortingActive] = useState(false);
 
     const handleFilterChange = (field, value) => {
         setTempFilterValues({
             ...tempFilterValues,
             [field]: value
         });
+    };
+
+    const handleSort = (field) => {
+        if (field === sortField) {
+            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+        } else {
+            setSortField(field);
+            setSortDirection("asc");
+        }
+        getUsers(1);
+        setIsSortingActive(true); // Ativar a exibição do botão de limpar ordenação
+    };
+
+    const clearSorting = () => {
+        setSortField("id");
+        setSortDirection("desc");
+        setIsSortingActive(false); // Desativar a exibição do botão de limpar ordenação
+        getUsers(1);
     };
 
     const applyFilters = () => {
@@ -49,27 +73,34 @@ export default function Users() {
         getUsers();
     };
 
+    const onDelete = (user) => {
+        if (window.confirm(`Deseja realmente excluir o usuário ${user.name}?`)) {
+            // Chame a função de exclusão na API
+            axiosClient.delete(`/users/${user.id}`)
+                .then(() => {
+                    // Atualize a lista de usuários após a exclusão
+                    getUsers();
+                    setNotification("Usuário excluído com sucesso.", "success");
+                })
+                .catch((error) => {
+                    console.error("Erro ao excluir o usuário:", error);
+                    setNotification("Erro ao excluir o usuário.", "error");
+                });
+        }
+    };
+
     const getUsers = (page = 1) => {
         setLoading(true);
         const params = new URLSearchParams();
 
-        if (tempFilterValues.name) {
-            params.append("name", tempFilterValues.name);
-        }
+        // ... outras partes do código ...
 
-        if (tempFilterValues.email) {
-            params.append("email", tempFilterValues.email);
-        }
-
-        if (tempFilterValues.created_at) {
-            const encodedCreatedAt = encodeURIComponent(tempFilterValues.created_at);
-            params.append("created_at", encodedCreatedAt);
-        }
+        // Adicionar parâmetros de ordenação
+        params.append("sort", sortField);
+        params.append("direction", sortDirection);
 
         params.append("page", page);
 
-        console.log(params);
-        console.log(params.toString());
         axiosClient.get(`/users?${params.toString()}`)
             .then(({ data }) => {
                 setLoading(false);
@@ -107,11 +138,18 @@ export default function Users() {
             </div>
 
             <div style={{ marginBottom: '1em', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <button onClick={() => setShowFilter(!showFilter)} className="btn-edit custom-tooltip" style={{ marginBottom: '1em', width: 'max-content' }}>
-                    {showFilter ? "Fechar Filtros " : "Abrir Filtros"}
-                    { showFilter && <span className="button-tooltip">Clique para ocultar o filtro</span>}
-                    { !showFilter && <span className="button-tooltip">Clique para exibir o filtro</span>}
-                </button>
+                <div>
+                    <button onClick={() => setShowFilter(!showFilter)} className="btn-edit custom-tooltip" style={{ marginBottom: '1em', width: 'max-content' }}>
+                        {showFilter ? "Fechar Filtros " : "Abrir Filtros"}
+                        {showFilter && <span className="button-tooltip">Clique para ocultar o filtro</span>}
+                        {!showFilter && <span className="button-tooltip">Clique para exibir o filtro</span>}
+                    </button>
+                    {isSortingActive && (
+                        <button onClick={clearSorting} className="btn-clear-sort btn-delete custom-tooltip" style={{ marginLeft: '1em' }}>
+                            Limpar Ordenação <span className="button-tooltip">Clique para exibir o filtro</span>
+                        </button>
+                    )}
+                </div>
                 {showFilter && (
                     <div className="filterArea" style={{ width: '100%' }}>
                         <div style={{ display: 'flex', width: '100%', justifyContent: "space-beetwen" }}>
@@ -144,7 +182,7 @@ export default function Users() {
                             </button>                          &nbsp;
                             {tempFilterValues.name || tempFilterValues.email || tempFilterValues.created_at ? (
                                 <button onClick={() => clearFilters()} className="btn-delete custom-tooltip">Limpar &times;
-                                <span className="button-tooltip">Limpar filtros &times;</span></button>
+                                    <span className="button-tooltip">Limpar filtros &times;</span></button>
                             ) : null}
                         </div>
                     </div>
@@ -155,13 +193,46 @@ export default function Users() {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Created Date</th>
+                            <th onClick={() => handleSort("id")}>
+                                ID{" "}
+                                {sortField === "id" && sortDirection === "asc" && (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                )}
+                                {sortField === "id" && sortDirection === "desc" && (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </th>
+                            <th onClick={() => handleSort("name")}>
+                                Name{" "}
+                                {sortField === "name" && sortDirection === "asc" && (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                )}
+                                {sortField === "name" && sortDirection === "desc" && (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </th>
+                            <th onClick={() => handleSort("email")}>
+                                Email{" "}
+                                {sortField === "email" && sortDirection === "asc" && (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                )}
+                                {sortField === "email" && sortDirection === "desc" && (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </th>
+                            <th onClick={() => handleSort("created_at")}>
+                                Created Date{" "}
+                                {sortField === "created_at" && sortDirection === "asc" && (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                )}
+                                {sortField === "created_at" && sortDirection === "desc" && (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </th>
                             <th>Actions</th>
                         </tr>
                     </thead>
+
                     {loading &&
                         <tbody>
                             <tr>
@@ -177,13 +248,14 @@ export default function Users() {
                                 <tr key={u.id}>
                                     <td>{u.id}</td>
                                     <td>{u.name}</td>
-                                    <td>{u.email}</td>
+                                    <td>{u.email ? u.email : '--'}</td>
                                     <td>{u.created_at}</td>
                                     <td>
                                         <Link className="btn-edit custom-tooltip" to={'/users/' + u.id}>Edit <span className="button-tooltip">Clique para ver os detalhes deste usuario</span></Link>
                                         &nbsp;
-                                        <button onClick={() => onDelete(u)} className="btn-delete custom-tooltip">Delete <span className="button-tooltip">Clique para remover este usuario</span></button>
-                                    </td>
+                                        <button onClick={() => onDelete(u)} className="btn-delete custom-tooltip">
+                                            Delete <span className="button-tooltip">Clique para remover este usuário</span>
+                                        </button>                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -193,13 +265,13 @@ export default function Users() {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2em 0' }}>
 
                     <div className="pagination">
-                        <button className=""
+                        <button className="btn-paginate"
                             onClick={() => getUsers(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
                             Anterior
                         </button>
-                        <button style={{ marginLeft: '1em' }}
+                        <button className="btn-paginate" style={{ marginLeft: '1em' }}
                             onClick={() => getUsers(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         >
