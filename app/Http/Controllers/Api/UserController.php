@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\AdminHasPermission;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -53,11 +55,24 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-
         $data['password'] = bcrypt($data['password']);
 
-        /** @var User $user  */
+        // Crie o usuário sem associar permissões ainda
         $user = User::create($data);
+
+        // Verifique se as permissões foram fornecidas no request
+
+        if ($request->has('permissions')) {
+            // Remove existing permissions
+            // Add new permissions
+            $permissions = [];
+            foreach ($data['permissions'] as $permissionId) {
+                $permissions[] = AdminHasPermission::create([
+                    'admin_modulo_id' => $permissionId,
+                    'admin_user_id' => $user->id
+                ]);
+            }
+        }
 
         return response(new UserResource($user), 201);
     }
@@ -84,13 +99,38 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        if (isset($data['password']) && !empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
+        if (!empty($request->has('password'))) {
+            $data['password'] = bcrypt($request->has('password'));
         }
 
         $user->update($data);
 
+        // Update permissions
+        if (isset($data['permissions'])) {
+            // Remove existing permissions
+            $user->permissions()->delete();
+
+            // Add new permissions
+            $permissions = [];
+            foreach ($data['permissions'] as $permissionId) {
+                $permissions[] = new AdminHasPermission([
+                    'admin_modulo_id' => $permissionId,
+                ]);
+            }
+            $user->permissions()->saveMany($permissions);
+        } else {
+            // If no permissions were provided, just delete all existing permissions
+            $user->permissions()->delete();
+        }
+
         return response(new UserResource($user));
+    }
+
+
+
+    public function permissions($id)
+    {
+        return response(AdminHasPermission::where('admin_user_id', $id)->get());
     }
 
     /**

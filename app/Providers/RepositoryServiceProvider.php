@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(\App\Repositories\ModulosAdminRepository::class, \App\Repositories\ModulosAdminRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\AdminHasPermissionRepository::class, \App\Repositories\AdminHasPermissionRepositoryEloquent::class);
+        //:end-bindings:
     }
 }

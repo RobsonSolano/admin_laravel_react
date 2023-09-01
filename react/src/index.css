@@ -232,7 +232,8 @@ table>tbody>tr>td {
     transition: all 0.2s;
 }
 
-#defaultLayout aside>a:hover {
+#defaultLayout aside>a:hover,
+#defaultLayout aside>a.active {
     background-color: rgba(0, 0, 0, 0.2);
 }
 

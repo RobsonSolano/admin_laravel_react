@@ -1,7 +1,9 @@
 <?php
 
+use App\Entities\AdminHasPermission;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ModulosAdminsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/modulos', [ModulosAdminsController::class, 'index']);
+    Route::get('/modulos/all', [ModulosAdminsController::class, 'modulos']);
+    Route::get('/users/{id}/permissions', [UserController::class, 'permissions']);
 
     Route::apiResource('/users', UserController::class);
 });
