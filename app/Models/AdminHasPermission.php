@@ -16,9 +16,9 @@ class AdminHasPermission extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'admin_modulo_id',
         'admin_user_id',
-        // outros campos, se houver
     ];
 
     public function user()

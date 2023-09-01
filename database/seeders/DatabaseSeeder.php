@@ -14,11 +14,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(100)->create();
+        \App\Models\User::factory()->create([
+            'id' => 1,
+            'name' => 'Admin Principal',
+            'email' => 'admin@laravelreact.com',
+            'password' => bcrypt('n4n0')
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\ModulosAdmin::factory()->create([
+            'id' => 1,
+            'nome' => 'Administradores',
+            'rota' => 'administradores'
+        ]);
+
+        \App\Models\AdminHasPermission::factory()->create([
+            'id' => 1,
+            'admin_modulo_id' => 1,
+            'admin_user_id' => 1
+        ]);
     }
 }

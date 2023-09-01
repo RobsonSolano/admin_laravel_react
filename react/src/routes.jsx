@@ -33,6 +33,10 @@ const router = createBrowserRouter([
                 path: '/administradores/:id',
                 element: <AdministradoresForm key="AdministradoresUpdate"/>
             },
+            {
+                path: '*',
+                element: <NotFound />
+            }
         ]
     },
     {
@@ -47,12 +51,11 @@ const router = createBrowserRouter([
                 path: '/signup',
                 element: <Signup />
             },
+            // {
+            //     path: '*',
+            //     element: <NotFound />
+            // }
         ]
-    },
-
-    {
-        path: '*',
-        element: <NotFound />
     },
 ])
 
