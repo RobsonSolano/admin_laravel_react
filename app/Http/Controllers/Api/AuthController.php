@@ -8,21 +8,24 @@ use App\Http\Requests\SignupRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-
-
     public function signup(SignupRequest $request)
     {
         $data = $request->validated();
 
-        /** @var User $user  */
-        $user = User::create([
+        $dataUser = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
-        ]);
+            'password' => bcrypt($data['password']),
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10)
+        ];
+
+        /** @var User $user  */
+        $user = User::create($dataUser);
 
         $token = $user->createToken('main')->plainTextToken;
 
@@ -32,6 +35,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
+
 
         if (!Auth::attempt($credentials)) {
             return response([

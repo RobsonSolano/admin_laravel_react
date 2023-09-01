@@ -70,8 +70,9 @@ export default function DefaultLayout() {
             <div className={`content ${sidebarHidden ? "expanded" : ""}`}>
                 <header>
                     <div>
-                        <button className="menu-toggle btn" onClick={toggleSidebar}>
+                        <button className="menu-toggle btn custom-tooltip" onClick={toggleSidebar}>
                             <FontAwesomeIcon icon={faBars} />
+                            <span className="button-tooltip tooltip-right">{`${sidebarHidden ? "Exibir menu lateral" : "Ocultar menu lateral"}`}</span>
                         </button>
                     </div>
                     <div>

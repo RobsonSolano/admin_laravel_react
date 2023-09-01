@@ -5,10 +5,10 @@ const StateContext = createContext({
     token: null,
     notification: null,
     modulos: [],
-    setUser: () => {},
-    setToken: () => {},
-    setNotification: () => {},
-    setModulos: () => {},
+    setUser: () => { },
+    setToken: () => { },
+    setNotification: () => { },
+    setModulos: () => { },
 })
 
 export const ContextProvider = ({ children }) => {

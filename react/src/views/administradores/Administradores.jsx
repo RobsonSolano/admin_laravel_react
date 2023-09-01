@@ -73,22 +73,6 @@ export default function Administradores() {
         getUsers();
     };
 
-    const onDelete = (user) => {
-        if (window.confirm(`Deseja realmente excluir o Administrador ${user.name}?`)) {
-            // Chame a função de exclusão na API
-            axiosClient.delete(`/users/${user.id}`)
-                .then(() => {
-                    // Atualize a lista de Administrador após a exclusão
-                    getUsers();
-                    setNotification("Administrador excluído com sucesso.", "success");
-                })
-                .catch((error) => {
-                    console.error("Erro ao excluir o administrador:", error);
-                    setNotification("Erro ao excluir o administrador.", "error");
-                });
-        }
-    };
-
     const getUsers = (page = 1) => {
         setLoading(true);
         const params = new URLSearchParams();
@@ -232,7 +216,7 @@ export default function Administradores() {
                                     <FontAwesomeIcon icon={faArrowDown} />
                                 )}
                             </th>
-                            <th onClick={() => handleSort("created_at")}>
+                            <th onClick={() => handleSort("created_at")} className="data-cadastro">
                                 Created Date{" "}
                                 {sortField === "created_at" && sortDirection === "asc" && (
                                     <FontAwesomeIcon icon={faArrowUp} />
@@ -241,7 +225,6 @@ export default function Administradores() {
                                     <FontAwesomeIcon icon={faArrowDown} />
                                 )}
                             </th>
-                            <th className="table-actions">Actions</th>
                         </tr>
                     </thead>
 
@@ -259,44 +242,39 @@ export default function Administradores() {
                             {users.map(u => (
                                 <tr key={u.id}>
                                     <td>{u.id}</td>
-                                    <td>{u.name}</td>
-                                    <td>{u.email ? u.email : '--'}</td>
-                                    <td>{u.created_at}</td>
-                                    <td className="table-actions">
-                                        <Link className="btn-edit custom-tooltip" to={'/administradores/' + u.id}>Edit <span className="button-tooltip">Clique para ver os detalhes deste administrador</span></Link>
-                                        &nbsp;
-                                        <button onClick={() => onDelete(u)} className="btn-delete custom-tooltip">
-                                            Delete <span className="button-tooltip">Clique para remover este administrador</span>
-                                        </button>
+                                    <td><Link className="custom-tooltip" to={'/administradores/' + u.id} style={{ textDecoration: 'none' }}>{u.name} <span className="button-tooltip">Clique para ver os detalhes deste administrador</span></Link>
                                     </td>
+                                    <td>{u.email ? u.email : '--'}</td>
+                                    <td className="data-cadastro">{u.created_at}</td>
                                 </tr>
                             ))}
                         </tbody>
                     }
                 </table>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2em 0', flexDirection:'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2em 0', flexDirection: 'column' }}>
                     <div style={{ marginBottom: "1em", textAlign: 'center' }}>
                         <p>Total de {totalItens} {totalItens > 1 ? 'itens' : 'item'}</p>
                     </div>
-                    <div className="pagination">
-                        <button className={`btn-paginate ${currentPage < 2 ? "disabled" : ""}`}
-                            onClick={() => getUsers(currentPage - 1)}
-                            disabled={currentPage < 2}
-                        >
-                            Anterior
-                        </button>
-                        <button className="btn-paginate" style={{ marginLeft: '1em' }}
-                            onClick={() => getUsers(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Próximo
-                        </button>
-                    </div>
-
+                    {totalPages > 1 &&
+                        <div className="pagination">
+                            <button className={`btn-paginate ${currentPage < 2 ? "disabled" : ""}`}
+                                onClick={() => getUsers(currentPage - 1)}
+                                disabled={currentPage < 2}
+                            >
+                                Anterior
+                            </button>
+                            <button className="btn-paginate" style={{ marginLeft: '1em' }}
+                                onClick={() => getUsers(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            >
+                                Próximo
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
 
-        </div>
+        </div >
     )
 }

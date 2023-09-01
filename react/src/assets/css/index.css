@@ -28,6 +28,7 @@ body {
     font-size: 14px;
     color: #212121;
     background-color: #f6f6f6;
+    overflow-x: hidden;
 }
 
 input {
@@ -57,12 +58,13 @@ input:focus {
     background: #5b08a7;
     border: 0;
     text-decoration: none;
-    padding: 15px;
     color: #ffffff;
     font-size: 16px;
     -webkit-transition: all 0.3 ease;
     transition: all 0.3 ease;
     cursor: pointer;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
 }
 
 .btn-block {
@@ -100,7 +102,7 @@ input:focus {
 }
 
 .btn-paginate.disabled {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -138,10 +140,27 @@ table>thead>tr>th {
     background-color: #efefef;
 }
 
+table>thead>tr>th.data-cadastro {
+    max-width: 100px;
+}
+
 table>tbody>tr>td {
     padding: 0.5rem 0.5rem;
     border-bottom: 1px solid #efefef;
     white-space: nowrap;
+}
+
+table>tbody>tr>td.data-cadastro {
+    max-width: 100px;
+}
+
+table>tbody>tr>td>a {
+    text-decoration: none;
+    color: #5b08a7;
+}
+
+table>tbody>tr>td>a:hover {
+    color: rgb(71, 10, 129);
 }
 
 .card {
@@ -284,10 +303,10 @@ table>tbody>tr>td {
 
 .custom-tooltip .button-tooltip {
     position: absolute;
-    top: -3.5em;
+    top: -4em;
     left: 50%;
-    max-width: 180px;
-    min-width: 150px;
+    max-width: 280px;
+    min-width: 200px;
     transform: translateX(-50%);
     background-color: #333;
     color: white;
@@ -299,6 +318,11 @@ table>tbody>tr>td {
     text-align: center;
     transition: opacity 0.2s, visibility 0.2s;
     z-index: 99999 !important;
+}
+
+.custom-tooltip .button-tooltip.tooltip-right {
+    top: 4px !important;
+    left: 150px !important;
 }
 
 .custom-tooltip:hover .button-tooltip {
@@ -345,5 +369,5 @@ table>tbody>tr>td {
 }
 
 .tr-list-itens>th:hover {
-    cursor: pointer
+    cursor: pointer;
 }

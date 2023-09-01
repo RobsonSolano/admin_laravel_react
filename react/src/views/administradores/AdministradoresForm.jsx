@@ -64,6 +64,22 @@ export default function AdministradoresForm() {
             });
     };
 
+    const onDelete = (user) => {
+        if (window.confirm(`Deseja realmente excluir o Administrador ${user.name}?`)) {
+            // Chame a função de exclusão na API
+            axiosClient.delete(`/users/${user.id}`)
+                .then(() => {
+                    // Atualize a lista de Administrador após a exclusão
+                    navigate('/administradores');
+                    setNotification("Administrador excluído com sucesso.", "success");
+                })
+                .catch((error) => {
+                    console.error("Erro ao excluir o administrador:", error);
+                    setNotification("Erro ao excluir o administrador.", "error");
+                });
+        }
+    };
+
     const onSubmit = (ev) => {
         ev.preventDefault();
         const userData = {
@@ -83,8 +99,6 @@ export default function AdministradoresForm() {
                     navigate(`/administradores/${user.id}`);
                 })
                 .catch((err) => {
-                    console.log(err);
-                    return;
                     const response = err.response;
                     setNotification("Não foi possível atualizar o Administrador");
 
@@ -134,8 +148,17 @@ export default function AdministradoresForm() {
 
     return (
         <>
-            {user.id && <h1>Update User: {user.name}</h1>}
-            {!user.id && <h1>New User: {user.name}</h1>}
+            <div className="area-topo" style={{ display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2>
+                    {user.id && `Atualizar: ${user.name}`}
+                    {!user.id && `Cadastrar: ${user.name}`}
+                </h2>
+                <button onClick={() => onDelete(user)} className="btn-delete custom-tooltip">
+                    Delete <span className="button-tooltip">Clique para remover este administrador</span>
+                </button>
+            </div>
+
+
 
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
@@ -180,7 +203,8 @@ export default function AdministradoresForm() {
                             type="password"
                             placeholder="Password Confirmation"
                         />
-                        <div className="" style={{ marginBottom: "2em", display: 'flex', flexDirection: 'column', borderTop:'1px solid #ddd', paddingTop:'1.5em', marginTop:'1em' }}>
+                        <div className="" style={{ marginBottom: "2em", display: 'flex', flexDirection: 'column', borderTop: '1px solid #ddd', paddingTop: '1.5em', marginTop: '1em' }}>
+                            <h3 style={{marginBottom:'1em'}}>Permissões de acesso</h3>
                             {modules.map((module) => (
                                 <label key={module.id}>
                                     <input
@@ -202,7 +226,7 @@ export default function AdministradoresForm() {
                                             }
                                         }}
                                     />
-                                    <span style={{marginLeft:'1em'}}>
+                                    <span style={{ marginLeft: '1em' }}>
                                         {module.nome}
                                     </span>
                                 </label>
@@ -212,6 +236,7 @@ export default function AdministradoresForm() {
                             <Link to="/administradores" className="btn btn-light">
                                 Cancelar
                             </Link>
+
                             <button className="btn">Save</button>
                         </div>
                     </form>

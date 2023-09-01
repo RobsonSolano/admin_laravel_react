@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\AdminHasPermission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -56,6 +57,8 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
+        $data['email_verified_at'] = now();
+        $data['remember_token'] = Str::random(10);
 
         // Crie o usuário sem associar permissões ainda
         $user = User::create($data);
