@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import axiosClient from "../axios-client";
-import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "../../axios-client";
+import { useStateContext } from "../../contexts/ContextProvider";
 import { Link } from "react-router-dom";
 
 export default function AdministradoresForm() {
