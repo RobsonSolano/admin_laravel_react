@@ -144,8 +144,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
-
+        $user->delete(); // Isso irá marcar o usuário como "deletado" suavemente
         return response("", 204);
     }
 }

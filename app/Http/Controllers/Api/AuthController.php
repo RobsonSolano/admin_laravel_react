@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         /** @var User $user  */
         $user = Auth::user();
-        $token = $user->createToken('main')->plainTextToken;
+        $token = $user->createToken('main', ['expires_in' => 480])->plainTextToken;
 
         return response(compact('user', 'token'), 200);
     }
