@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { useStateContext } from "../../contexts/ContextProvider"
 
-export default function Login() {
+export default function ForgotPassword() {
     const emailRef = useRef();
-    const passwordRef = useRef();
     const [errors, setErrors] = useState(null);
 
     const { setUser, setToken } = useStateContext()
@@ -14,12 +13,11 @@ export default function Login() {
         ev.preventDefault()
 
         const playlod = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value
+            email: emailRef.current.value
         }
 
         setErrors(null)
-        axiosClient.post('/login', playlod)
+        axiosClient.post('/forgot-password', playlod)
             .then(({ data }) => {
                 setUser(data.user)
                 setToken(data.token)
@@ -30,7 +28,7 @@ export default function Login() {
                 if (err.response && err.response.status === 422 && err.response.data && err.response.data.message) {
                     setErrors([err.response.data.message]);
                 } else {
-                    setErrors(["E-mail ou senha incorretos, por favor tente novamente."]);
+                    setErrors(["Não foi possível solicitar a recuperação de senha, por favor, tente novamente."]);
                 }
             });
     }
@@ -38,7 +36,7 @@ export default function Login() {
     return (
         <form action="" onSubmit={onSubmit}>
             <h1 className="title">
-               Acesse sua conta
+                Recupere sua senha
             </h1>
 
             {errors && (
@@ -49,13 +47,9 @@ export default function Login() {
                 </div>
             )}
             <input ref={emailRef} type="email" placeholder="Email Address" />
-            <input ref={passwordRef} type="password" placeholder="Password" />
-            <button type="submit" className="btn btn-block">Login</button>
+            <button type="submit" className="btn btn-block">Recuperar senha</button>
             <p className="message">
-                Não cadastrado? <Link to="/signup">Crie sua conta</Link>
-            </p>
-            <p className="message">
-                Esqueceu sua senha? <Link to="/recuperar-senha">Recuperar</Link>
+                Já possui login? <Link to="/login">Login</Link>
             </p>
         </form>
     )

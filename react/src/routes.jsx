@@ -7,6 +7,7 @@ import Dashboard from "./views/dashboard";
 import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
 import AdministradoresForm from "./views/administradores/AdministradoresForm";
+import ForgotPassword from "./views/auth/forgotpassword";
 
 const router = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
             {
                 path: 'signup',
                 element: <Signup />
+            },
+            {
+                path: 'recuperar-senha',
+                element: <ForgotPassword />
             }
         ]
     },

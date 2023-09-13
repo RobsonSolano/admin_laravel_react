@@ -58,4 +58,12 @@ class AuthController extends Controller
 
         return response('', 204);
     }
+
+    public function forgotPassword(Request $request) {
+        dd($request);
+    }
+
+    public function resetPassword(Request $request) {
+        // Valide o código de recuperação e permita que o usuário redefina sua senha.
+    }
 }

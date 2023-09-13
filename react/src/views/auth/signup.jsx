@@ -42,7 +42,7 @@ export default function Signup() {
     return (
         <form action="" onSubmit={onSubmit}>
             <h1 className="title">
-                Create your account
+               Crie sua conta
             </h1>
 
 
